@@ -62,13 +62,13 @@ int	main(int ac, char **av)
 	}
 
 	/* Variable ************************************************************* */
-	Server	server;
+	Server	server(av);
 
 	try
 	{
 		server.run();
 		std::cout << GREEN << "✅ Socket created successfully." << ENDL;
-		server.bind(atoi(av[1]));
+		server.bind();
 		std::cout << GREEN << "✅ Socket binded successfully." << ENDL;
 		server.listen();
 		std::cout << GREEN << "✅ Server listening on 127.0.0.1:" <<

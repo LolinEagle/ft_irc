@@ -12,7 +12,7 @@
 
 #include <Server.hpp>
 
-Server::Server()
+Server::Server(char **av)
 {
 	/* int socket(int domain, int type, int protocol);
 	AF_INET: IPv4 Internet protocols (man 7 ip)
@@ -21,8 +21,8 @@ Server::Server()
 	0: Normally only a single protocol exists to support a particular socket
 	type within a given protocol family, in which case protocol can be 0.*/
 	_socket_fd = 0;
-	_port = 0;
-	_password = NULL;
+	_port = atoi(av[1]);
+	_password = av[2];
 	_accept_fd = 0;
 	_opt = 1;
 	_max_clients = MAX_CLIENT;
@@ -36,22 +36,48 @@ Server::~Server()
 	close(_socket_fd);
 }
 
-int		Server::getSocketFd(void)
+int						Server::getSocketFd(void)
 {
 	return (_socket_fd);
 }
 
-int		Server::getAccept(void)
+int						Server::getAccept(void)
 {
 	return (_accept_fd);
 }
 
-char	*Server::getBuffer(void)
+int						Server::getPort()
+{
+	return (_port);
+}
+
+char*					Server::getBuffer(void)
 {
 	return (_buffer);
 }
 
-void	Server::setAccept(void)
+Client*					Server::getClient(int i)
+{
+	if (i == 0)
+		return (&_clients.front());
+	if ((size_t)i > _clients.size())
+		return (NULL);
+	std::vector<Client>::iterator it = _clients.begin();
+	std::advance(it, i - 1);
+	return (&(*it));
+}
+
+std::vector<Client>		Server::getClients()
+{
+	return (_clients);
+}
+
+std::vector<Channel>	Server::getChannels()
+{
+	return (_channels);
+}
+
+void					Server::setAccept(void)
 {
 	_accept_fd = accept(
 		_socket_fd,
@@ -60,7 +86,7 @@ void	Server::setAccept(void)
 	);
 }
 
-void	Server::setAddress(void)
+void					Server::setAddress(void)
 {
 	/* memset(): Init the struct sockaddr_in to 0
 	AF_INET: IPv4 Internet protocols (man 7 ip)
@@ -74,43 +100,33 @@ void	Server::setAddress(void)
 	_address.sin_port = htons(_port);
 }
 
-int			*Server::getPtrOpt(void)
+int*					Server::getPtrOpt(void)
 {
 	return (&_opt);
 }
 
-Client	*Server::getClient(int i)
-{
-	if (i == 0)
-		return (&_clients.front());
-	if ((size_t)i > _clients.size())
-		return (NULL);
-	std::vector<Client>::iterator it = _clients.begin();
-	std::advance(it, i - 1);
-	return (&(*it));
-}
-
-sockaddr	*Server::getCastAddress(void)
+sockaddr*				Server::getCastAddress(void)
 {
 	return (reinterpret_cast<sockaddr*>(&_address));
 }
 
-void Server::bind(int port) {
+void					Server::bind(void)
+{
 	_address.sin_family = AF_INET;
 	_address.sin_addr.s_addr = INADDR_ANY;
-	_address.sin_port = htons(port);
-	_port = port;
-
+	_address.sin_port = htons(_port);
 	if (::bind(_socket_fd, (struct sockaddr *)&_address, sizeof(_address)) < 0)
 		throw "Failed to bind socket.";
 }
 
-void Server::listen() {
+void					Server::listen()
+{
 	if (::listen(_socket_fd, _max_clients) < 0)
 		throw "Failed to listen on socket.";
 }
 
-void Server::run() {
+void					Server::run()
+{
 	_socket_fd = socket(2, 1, 0);
 	if (_socket_fd == -1)
 		throw "Failed to create socket.";
@@ -127,40 +143,35 @@ void Server::run() {
 		throw "Failed to set options on sockets.";
 }
 
-int Server::getPort() {
-	return _port;
-}
-
-void Server::addClient(Client &client) {
+void					Server::addClient(Client &client)
+{
 	_clients.push_back(client);
 }
 
-void Server::removeClient(Client client) {
-	for (std::vector<Client>::iterator it = _clients.begin(); it != _clients.end(); it++) {
-		if (it->getSocket() == client.getSocket()) {
+void					Server::removeClient(Client client)
+{
+	for (std::vector<Client>::iterator it = _clients.begin();
+	it != _clients.end(); it++) {
+		if (it->getSocket() == client.getSocket())
+		{
 			_clients.erase(it);
-			break;
+			break ;
 		}
 	}
 }
 
-void Server::addChannel(Channel channel) {
+void					Server::addChannel(Channel channel)
+{
 	_channels.push_back(channel);
 }
 
-void Server::removeChannel(Channel channel) {
-	for (std::vector<Channel>::iterator it = _channels.begin(); it != _channels.end(); it++) {
+void					Server::removeChannel(Channel channel)
+{
+	for (std::vector<Channel>::iterator it = _channels.begin();
+	it != _channels.end(); it++) {
 		if (it->getName() == channel.getName()) {
 			_channels.erase(it);
-			break;
+			break ;
 		}
 	}
-}
-
-std::vector<Client> Server::getClients() {
-	return _clients;
-}
-
-std::vector<Channel> Server::getChannels() {
-	return _channels;
 }

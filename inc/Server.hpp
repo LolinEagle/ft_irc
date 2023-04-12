@@ -32,37 +32,34 @@ class Server
 		sockaddr_in				_address;
 		int						_port;
 		int						_socket_fd;
-		// std::vector<Message>	_messages;
 	public:
 		/* Constructor & Destructor ***************************************** */
-		Server();
+		Server(char **av);
 		~Server();
 
-		/* Getter *********************************************************** */
-		int		getSocketFd(void);
-		int		getAccept(void);
-		int		getPort(void);
-		char	*getBuffer(void);
-		Client	*getClient(int fd);
-
-		/* Setter *********************************************************** */
-		void	setAccept(void);
-		void	setAddress(void);
-		void	setPort(int port);
-
-		void	addClient(Client& client);
-		void	addChannel(Channel channel);
-		void	removeClient(Client client);
-		void	removeChannel(Channel channel);
-
+		/* Getter & Setter ************************************************** */
+		int						getSocketFd(void);
+		int						getAccept(void);
+		int						getPort(void);
+		char*					getBuffer(void);
+		Client*					getClient(int fd);
 		std::vector<Client>		getClients(void);
 		std::vector<Channel>	getChannels(void);
+		void					setAccept(void);
+		void					setAddress(void);
+
+		/* Special Getter *************************************************** */
+		int*					getPtrOpt(void);
+		sockaddr*				getCastAddress(void);
 
 		/* Function ********************************************************* */
-		int			*getPtrOpt(void);
-		sockaddr	*getCastAddress(void);
+		void					bind(void);
+		void					listen(void);
+		void					run(void);
 
-		void		bind(int port);
-		void		listen(void);
-		void		run(void);
+		/* Client & Channel ************************************************* */
+		void					addClient(Client& client);
+		void					removeClient(Client client);
+		void					addChannel(Channel channel);
+		void					removeChannel(Channel channel);
 };

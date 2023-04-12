@@ -160,7 +160,8 @@ void Channel::addMuted(const Client client) {
  * @param client 
  */
 void Channel::removeClient(Client client) {
-    for (std::vector<Client>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++) {
+    for (std::vector<Client>::iterator it = this->_clients.begin();
+    it != this->_clients.end(); it++) {
         if (it->getId() == client.getId()) {
             this->_clients.erase(it);
             break;
@@ -169,7 +170,8 @@ void Channel::removeClient(Client client) {
 }
 
 void Channel::removeOperator(Client client) {
-    for (std::vector<Client>::iterator it = this->_operators.begin(); it != this->_operators.end(); it++) {
+    for (std::vector<Client>::iterator it = this->_operators.begin();
+    it != this->_operators.end(); it++) {
         if (it->getId() == client.getId()) {
             this->_operators.erase(it);
             break;
@@ -178,7 +180,8 @@ void Channel::removeOperator(Client client) {
 }
 
 void Channel::removeAdmin(Client client) {
-    for (std::vector<Client>::iterator it = this->_admins.begin(); it != this->_admins.end(); it++) {
+    for (std::vector<Client>::iterator it = this->_admins.begin();
+    it != this->_admins.end(); it++) {
         if (it->getId() == client.getId()) {
             this->_admins.erase(it);
             break;
@@ -187,7 +190,8 @@ void Channel::removeAdmin(Client client) {
 }
 
 void Channel::disownClient(Client client) {
-    for (std::vector<Client>::iterator it = this->_owners.begin(); it != this->_owners.end(); it++) {
+    for (std::vector<Client>::iterator it = this->_owners.begin();
+    it != this->_owners.end(); it++) {
         if (it->getId() == client.getId()) {
             this->_owners.erase(it);
             break;
@@ -202,7 +206,8 @@ void Channel::disownClient(Client client) {
  * @param client 
  */
 void Channel::unbanClient(Client client) {
-    for (std::vector<Client>::iterator it = this->_banned.begin(); it != this->_banned.end(); it++) {
+    for (std::vector<Client>::iterator it = this->_banned.begin();
+    it != this->_banned.end(); it++) {
         if (it->getId() == client.getId()) {
             this->_banned.erase(it);
             break;
@@ -217,7 +222,8 @@ void Channel::unbanClient(Client client) {
  * @param client 
  */
 void Channel::unmuteClient(Client client) {
-    for (std::vector<Client>::iterator it = this->_muted.begin(); it != this->_muted.end(); it++) {
+    for (std::vector<Client>::iterator it = this->_muted.begin();
+    it != this->_muted.end(); it++) {
         if (it->getId() == client.getId()) {
             this->_muted.erase(it);
             break;
