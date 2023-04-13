@@ -65,7 +65,7 @@ int	main(int ac, char **av)
 			FD_SET(server.getSocketFd(), &readfds);
 			FD_SET(server.getSocketFd(), &writefds);
 
-			if ((select(server.getHighestFd(&readfds, &writefds) + 1, &readfds, &writefds, NULL, NULL) < 0) && (errno != EINTR))
+			if (select(server.getHighestFd(&readfds, &writefds) + 1, &readfds, &writefds, NULL, NULL) < 0 && errno != EINTR)
 				std::cerr << "select error" << std::endl;
 
 			if (FD_ISSET(server.getSocketFd(), &readfds))
@@ -97,11 +97,15 @@ int	main(int ac, char **av)
 			for (size_t i = 0; i < server.getClients().size(); i++)
 			{
 				if (FD_ISSET(server.getClients().at(i)->getSocket(), &writefds))
-					if (server.getClients().at(i)->isReady() && server.getClients().at(i)->isWelcomed())
+					if (server.getClients().at(i)->isReady()
+						&& server.getClients().at(i)->isWelcomed())
 						server.welcome(server.getClients().at(i));
 				if (FD_ISSET(server.getClients().at(i)->getSocket(), &readfds))
 				{
-					valread = read(server.getClients().at(i)->getSocket(), server.getBuffer(), 1024);
+					valread = read(
+						server.getClients().at(i)->getSocket(),
+						server.getBuffer(), 1024
+					);
 					if (valread == 0)
 					{
 						std::cerr << RED << "Client " << server.getClients().at(i)->getSocket() << " disconnected." << ENDL;
@@ -111,7 +115,10 @@ int	main(int ac, char **av)
 					else
 					{
 						server.getBuffer()[valread] = '\0';
-						server.commandHandler(server.getBuffer(), server.getClients().at(i));
+						server.commandHandler(
+							server.getBuffer(),
+							server.getClients().at(i)
+						);
 					}
 				}
 			}

@@ -23,39 +23,38 @@ class Server
 		sockaddr_in				_address;
 		int						_port;
 		int						_socket_fd;
-
 	public:
+		/* Constructor & Destructor ***************************************** */
 		Server();
 		~Server();
 
-		int		getSocketFd(void);
-		int		getAccept(void);
-		int		getPort(void);
-		char	*getBuffer(void);
-		Client	*getClient(int fd);
-		int		getHighestFd(fd_set*, fd_set*);
+		/* Getter *********************************************************** */
+		int						getSocketFd(void);
+		int						getAccept(void);
+		int						getPort(void);
+		char					*getBuffer(void);
+		Client					*getClient(int fd);
+		int						getHighestFd(fd_set*, fd_set*);
+		std::vector<Client *>	getClients(void);
+		std::vector<Channel *>	getChannels(void);
+		int						*getPtrOpt(void);
+		sockaddr				*getCastAddress(void);
 
+		/* Setter *********************************************************** */
 		void	setAccept(void);
 		void	setAddress(void);
 		void	setPort(int port);
 
+		/* Function ********************************************************* */
 		void	addClient(Client *client);
 		void	addChannel(Channel *channel);
 		void	removeClient(Client *client);
 		void	removeChannel(Channel *channel);
 
 		void	commandHandler(std::string command, Client *client);
-
-		// COMMANDS
 		void	welcome(Client *client);
-
-		std::vector<Client *>	getClients(void);
-		std::vector<Channel *>	getChannels(void);
-
-		int			*getPtrOpt(void);
-		sockaddr	*getCastAddress(void);
-
-		void		bind(int port);
-		void		listen(void);
-		void		run(void);
+		
+		void	bind(int port);
+		void	listen(void);
+		void	run(void);
 };

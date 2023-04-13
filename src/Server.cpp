@@ -59,7 +59,8 @@ int		Server::getHighestFd(fd_set *readfds, fd_set *writefds)
 {
 	int		highest_fd = _socket_fd;
 
-	for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); it++)
+	for (std::vector<Client *>::iterator it = _clients.begin();
+	it != _clients.end(); it++)
 	{
 		FD_SET((*it)->getSocket(), readfds);
 		FD_SET((*it)->getSocket(), writefds);
@@ -93,7 +94,8 @@ int			*Server::getPtrOpt(void)
 
 Client	*Server::getClient(int fd)
 {
-	for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); it++)
+	for (std::vector<Client *>::iterator it = _clients.begin();
+	it != _clients.end(); it++)
 	{
 		if ((*it)->getSocket() == fd)
 			return (*it);
@@ -139,7 +141,8 @@ void Server::addClient(Client *client) {
 }
 
 void Server::removeClient(Client *client) {
-	for (std::vector<Client *>::iterator it = _clients.begin(); it != _clients.end(); it++) {
+	for (std::vector<Client *>::iterator it = _clients.begin();
+	it != _clients.end(); it++) {
 		if ((*it)->getSocket() == client->getSocket()) {
 			_clients.erase(it);
 			break;
@@ -152,7 +155,8 @@ void Server::addChannel(Channel *channel) {
 }
 
 void Server::removeChannel(Channel *channel) {
-	for (std::vector<Channel *>::iterator it = _channels.begin(); it != _channels.end(); it++) {
+	for (std::vector<Channel *>::iterator it = _channels.begin();
+	it != _channels.end(); it++) {
 		if ((*it)->getName() == channel->getName()) {
 			_channels.erase(it);
 			break;
@@ -171,7 +175,7 @@ std::vector<Channel *> Server::getChannels() {
 void	Server::commandHandler(std::string command, Client *client)
 {
 	std::cout << "----------------------------------------" << std::endl;
-	std::cout << "Received a command from " << client->getUsername() << std::endl;
+	std::cout << "Received a command from " << client->getUsername() << ENDL;
 	std::cout << "----------------------------------------" << std::endl;
 	std::cout << YELLOW << command << ENDL;
 	std::cout << "----------------------------------------" << std::endl;

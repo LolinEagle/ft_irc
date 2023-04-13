@@ -45,10 +45,10 @@ class Channel {
     private:
         int                 _id;
         std::string         _name;
-        std::vector<Client>   _clients;
-        std::vector<Client>   _operators;
-        std::vector<Client>   _admins;
-        std::vector<Client>   _owners;
-        std::vector<Client>   _banned;
-        std::vector<Client>   _muted;
+        std::vector<Client> _clients;
+        std::vector<Client> _operators;
+        std::vector<Client> _admins;
+        std::vector<Client> _owners;
+        std::vector<Client> _banned;
+        std::vector<Client> _muted;
 };
