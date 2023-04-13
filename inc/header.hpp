@@ -6,7 +6,7 @@
 /*   By: recarlie <recarlie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/22 12:00:30 by frrusso           #+#    #+#             */
-/*   Updated: 2023/04/12 16:37:03 by recarlie         ###   ########.fr       */
+/*   Updated: 2023/04/13 11:41:57 by recarlie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,3 +40,4 @@
 #define MAX_REQUESTS	8
 #define MAX_CLIENT		42
 #define SERVER_NAME     "ft_irc"
+

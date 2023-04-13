@@ -172,6 +172,17 @@ std::vector<Channel *> Server::getChannels() {
 	return _channels;
 }
 
+void	Server::sendToClient(std::string message, Client *client)
+{
+	std::cout << "----------------------------------------" << std::endl;
+	std::cout << "Sending a message to " << client->getUsername() << std::endl;
+	std::cout << "----------------------------------------" << std::endl;
+	std::cout << YELLOW << message << ENDL;
+	std::cout << "----------------------------------------" << std::endl;
+	message.append("\r\n");
+	send(client->getSocket(), message.c_str(), message.length(), 0);
+}
+
 void	Server::commandHandler(std::string command, Client *client)
 {
 	std::cout << "----------------------------------------" << std::endl;
@@ -183,6 +194,11 @@ void	Server::commandHandler(std::string command, Client *client)
 	std::string		item;
 	std::vector<std::string> tokens;
 
+	if (client->isWelcomed())
+	{
+		welcome(client);
+		return ;
+	}
 	while (std::getline(ss, item, '\n'))
 		tokens.push_back(item);
 
@@ -193,7 +209,7 @@ void	Server::commandHandler(std::string command, Client *client)
 	for (size_t i = 0; i < tokens.size(); i++)
 	{
 		if (startwith("NICK", tokens[i]))
-			std::cout << "NICK" << std::endl;
+			nick(tokens[i], client);
 		else if (startwith("USER", tokens[i]))
 			std::cout << "USER" << std::endl;
 		else if (startwith("PING", tokens[i]))
@@ -216,10 +232,31 @@ void	Server::welcome(Client *client)
 
 // TODO: Implement all the commands here :
 
-// void	Server::nick(std::string command, Client *client)
-// {
-// 	std::cout << "NICK" << std::endl;
-// }
+void	Server::nick(std::string command, Client *client)
+{
+	std::stringstream ss(command);
+	std::string		item;
+	std::vector<std::string> tokens;
+
+	while (std::getline(ss, item, ' '))
+		tokens.push_back(item);
+
+	if (tokens.size() < 2)
+	{
+		std::cout << RED << "Invalid command sent by " << client->getUsername() << " : " << YELLOW << command << ENDL;
+		sendToClient(": serverserver " + Errors::ERR_NONICKNAMEGIVEN + " * :No nickname given", client);
+		return ;
+	}
+	if (tokens.size() > 2)
+	{
+		std::cout << RED << "Invalid command sent by " << client->getUsername() << " : " << YELLOW << command << ENDL;
+		sendToClient(": serverserver " + Errors::ERR_ERRONEUSNICKNAME + " * :Erroneous nickname", client);
+		return ;
+	}
+	client->setUsername(tokens[1]);
+	if (client->isWelcomed() == 0)
+		sendToClient("NICK : " + tokens[1], client);
+}
 
 // void	Server::user(std::string command, Client *client)
 // {
